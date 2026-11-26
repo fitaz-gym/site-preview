@@ -1254,3 +1254,9 @@ h1, h2, h3 { overflow-wrap: break-word; }
 .pass { grid-template-rows: auto auto 1fr auto; align-content: stretch; }
 .pass .btn { align-self: end; }
 :root .band.accent-bg .eyebrow, :root[data-mode="silver"] .band.accent-bg .eyebrow { color: var(--accent-ink); opacity: .75; }
+
+/* 26 Nov 2026: no caption on the walk-through video; less empty space under the reviews. */
+.wt-cap[hidden] { display: none; }
+.wallsec { padding-bottom: clamp(24px, 3vw, 40px); }
+.wallsec .revm { margin-bottom: 0; }
+.wallsec .revm { margin-top: 26px; }
