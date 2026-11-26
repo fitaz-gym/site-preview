@@ -1238,3 +1238,9 @@ h1, h2, h3 { overflow-wrap: break-word; }
 
 /* 26 Nov 2026: no big rating headline. The rating sits beside the stars. */
 .gline .gnum { font: 700 14px/1 var(--body); letter-spacing: 0; color: #fff; }
+
+/* 26 Nov 2026: service cards show the photo in full on top, text underneath. Before, the text panel sat over the photo and cut most of it off in dark mode. */
+.svc { display: flex; flex-direction: column; align-items: stretch; min-height: 0; background: #17171a; }
+.svc img { position: static; inset: auto; width: 100%; height: auto; aspect-ratio: 3 / 2; display: block; }
+.svc::after { display: none; }
+.svc .body { background: #17171a; flex: 1; align-content: start; }
