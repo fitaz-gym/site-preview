@@ -140,6 +140,42 @@
   });
 
   // Walk-through: arrows in the photo walk you to the next room, the marker follows on the plan, the photo moves forward
+  // Walk-through v5: one video. It plays while it is on screen, the bar scrubs it, the room buttons jump to a room.
+  $$('[data-wt]').forEach(w => {
+    const v = $('video', w), view = $('.wt-view', w), track = $('.wt-track', w), fill = $('.wt-fill', w), knob = $('.wt-knob', w), big = $('.wt-big', w), pp = $('.wt-pp', w), full = $('.wt-full', w), rooms = $$('.wt-room', w), kEl = $('[data-wt-k]', w), tEl = $('[data-wt-t]', w);
+    const half = +w.dataset.half, dur = () => v.duration || +w.dataset.dur;
+    let loaded = false, held = false, drag = false, cur = 0, seen = false;
+    const load = () => { if (!loaded) { loaded = true; v.src = v.dataset.src; v.load(); } };
+    const seek = x => { load(); x = Math.max(0, Math.min(dur() - .05, x)); if (v.readyState >= 1) v.currentTime = x; else v.addEventListener('loadedmetadata', () => { v.currentTime = x; }, { once: true }); paint(x); };
+    const play = () => { load(); const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+    const paint = x => { const T = x === undefined ? v.currentTime : x, pc = T / dur() * 100;
+      fill.style.width = pc + '%'; knob.style.left = pc + '%'; track.setAttribute('aria-valuenow', Math.round(T));
+      let i = 0; rooms.forEach((r, j) => { if (T >= +r.dataset.s - half) i = j; });
+      if (i !== cur) { cur = i; rooms.forEach((r, j) => r.classList.toggle('on', j === i)); kEl.textContent = rooms[i].dataset.k; tEl.textContent = rooms[i].dataset.t;
+        const st = rooms[i].parentElement; st.scrollTo({ left: rooms[i].offsetLeft - st.offsetLeft - st.clientWidth / 2 + rooms[i].clientWidth / 2, behavior: 'smooth' }); } };
+    const state = () => { const on = !v.paused; w.classList.toggle('playing', on); pp.textContent = on ? '❚❚' : '▶'; pp.setAttribute('aria-label', on ? 'Pause' : 'Play'); big.setAttribute('aria-label', on ? 'Pause the walk-through' : 'Play the walk-through'); };
+    const toggle = () => { if (v.paused) { held = false; play(); } else { held = true; v.pause(); } };
+    v.addEventListener('timeupdate', () => { if (!drag) paint(); });
+    v.addEventListener('play', state); v.addEventListener('pause', state);
+    const loop = () => { if (!v.paused && !drag) paint(); requestAnimationFrame(loop); }; requestAnimationFrame(loop);
+    big.addEventListener('click', toggle); pp.addEventListener('click', toggle);
+    rooms.forEach(r => r.addEventListener('click', () => { held = false; seek(+r.dataset.s); play(); }));
+    // Scrub: drag anywhere on the bar. The video is paused while dragging so each frame shows as you move.
+    const at = e => { const r = track.getBoundingClientRect(); return Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * dur(); };
+    let was = false, raf = 0, want = 0;
+    track.addEventListener('pointerdown', e => { drag = true; was = !v.paused; v.pause(); track.setPointerCapture(e.pointerId); seek(at(e)); e.preventDefault(); });
+    track.addEventListener('pointermove', e => { if (!drag) return; want = at(e); paint(want); if (!raf) raf = requestAnimationFrame(() => { raf = 0; if (v.readyState >= 1) v.currentTime = want; }); });
+    const up = () => { if (!drag) return; drag = false; if (was && !held) play(); };
+    track.addEventListener('pointerup', up); track.addEventListener('pointercancel', up);
+    track.addEventListener('keydown', e => { if (e.key === 'ArrowRight') seek(v.currentTime + 2); if (e.key === 'ArrowLeft') seek(v.currentTime - 2); if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); } });
+    full.addEventListener('click', () => { const on = !w.classList.contains('full'); w.classList.toggle('full', on); document.documentElement.classList.toggle('cb-lock', on); full.setAttribute('aria-pressed', String(on)); full.textContent = on ? '✕' : '⤢'; });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && w.classList.contains('full')) full.click(); });
+    // Plays on its own while it is on screen (not for people who ask for reduced motion), and stops when scrolled away.
+    if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { seen = e.isIntersecting; if (seen) { load(); if (!held && !calm) play(); } else v.pause(); }), { threshold: .5 }).observe(view);
+    const q = /[?&]wt=([\d.]+)/.exec(location.search); if (q) { held = true; seek(+q[1]); }
+    if (/[?&]tourfull\b/.test(location.search)) full.click();
+  });
+
   $$('[data-floor]').forEach(fl => {
     const view = $('.fl-view', fl), shots = $$('.fl-shot', fl), dots = $$('.fl-stop', fl), lights = $('.fl-lights', fl), live = $('.fl-live', fl), play = $('.fl-play', fl), full = $('.fl-full', fl), mv = $('.fl-mv', fl), gen = $('.fl-gen', fl);
     let cur = 0, timer = null, moving = false;
