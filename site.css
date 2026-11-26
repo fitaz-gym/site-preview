@@ -1244,3 +1244,13 @@ h1, h2, h3 { overflow-wrap: break-word; }
 .svc img { position: static; inset: auto; width: 100%; height: auto; aspect-ratio: 3 / 2; display: block; }
 .svc::after { display: none; }
 .svc .body { background: #17171a; flex: 1; align-content: start; }
+
+/* 26 Nov 2026: memberships page opens with the offer band; the "Join in three steps" heading sits under it on the page colour. Casual pass buttons line up. */
+.mtop { padding-top: 20px; padding-bottom: 0; }
+.band .eyebrow { color: inherit; opacity: .78; }
+.mhead.plain { background: none; color: var(--txt); padding-top: 28px; padding-bottom: 8px; }
+.mhead.plain h1 span { color: inherit; }
+.passes { align-items: stretch; }
+.pass { grid-template-rows: auto auto 1fr auto; align-content: stretch; }
+.pass .btn { align-self: end; }
+:root .band.accent-bg .eyebrow, :root[data-mode="silver"] .band.accent-bg .eyebrow { color: var(--accent-ink); opacity: .75; }
