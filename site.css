@@ -1145,3 +1145,20 @@ h1, h2, h3 { overflow-wrap: break-word; }
 :root[data-mode="silver"] .revm .rv { background: #17171a; }
 .split .ph.tallm { aspect-ratio: 4 / 5; }
 @media (min-width: 860px) { .split .ph.tallm { aspect-ratio: 5 / 4; } }
+
+/* Walk-through v3 (26 Nov 2026): generated moves and a lighting preview, both labelled */
+.fl-shot img.night { opacity: 0; }
+.fl-view.usenight .fl-shot.on img.night { opacity: 1; }
+.fl-mv { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2; opacity: 0; pointer-events: none; transition: opacity .3s; background: #000; }
+.fl-view.mv .fl-mv { opacity: 1; }
+.fl-view.mv .fl-go, .fl-view.mv .fl-nav { opacity: 0; pointer-events: none; }
+.fl-cap { z-index: 3; }
+.fl-gen { display: inline-block; width: fit-content; font: 600 11px/1 var(--body); font-style: normal; letter-spacing: .04em; text-transform: uppercase; background: #fff; color: #0b0b0c; border-radius: 999px; padding: 5px 9px; margin-bottom: 4px; }
+.fl-gen[hidden] { display: none; }
+@media (max-width: 620px) { .fl-tools { flex-wrap: wrap; } .fl-tools button { padding: 9px 11px; font-size: 12px; } }
+@media (max-width: 620px) {
+  .fl-go { inset: auto 12px auto 12px; top: 62px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .fl-go button { position: static; transform: none; display: inline-flex; align-items: center; gap: 6px; padding: 0 12px 0 4px; min-height: 40px; background: rgba(11,11,12,.72); border-radius: 999px; text-shadow: none; }
+  .fl-go i { width: 30px; height: 30px; border-width: 1.5px; box-shadow: none; } .fl-go i::after { display: none; } .fl-go i::before { width: 9px; height: 9px; border-width: 2px; transform: translateY(2px) rotate(45deg); }
+  .fl-go span { background: none; padding: 0; font-size: 12.5px; }
+}
