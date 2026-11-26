@@ -106,6 +106,19 @@
     if (nav) $$('button', nav).forEach(b => b.addEventListener('click', () => rail.scrollBy({ left: (b.dataset.d === 'next' ? 1 : -1) * Math.min(540, rail.clientWidth * .85), behavior: calm ? 'auto' : 'smooth' })));
   });
 
+  // Reviews on phones: swipe, arrows, and a gentle auto-advance that waits while you touch it
+  $$('[data-revm]').forEach(box => {
+    const tr = $('.revm-track', box), cards = $$('.rv', tr), n = $('[data-n]', box); let i = 0, hold = 0;
+    const at = () => { const x = tr.scrollLeft + 4; let k = 0; cards.forEach((c, j) => { if (c.offsetLeft - cards[0].offsetLeft <= x) k = j; }); return k; };
+    const go = (k, auto) => { i = (k + cards.length) % cards.length; tr.scrollTo({ left: cards[i].offsetLeft - cards[0].offsetLeft, behavior: calm || (auto && i === 0) ? 'auto' : 'smooth' }); n.textContent = `${i + 1} / ${cards.length}`; };
+    tr.addEventListener('scroll', () => { i = at(); n.textContent = `${i + 1} / ${cards.length}`; }, { passive: true });
+    const wait = () => { hold = Date.now() + 7000; };
+    ['touchstart', 'pointerdown', 'focusin'].forEach(e => box.addEventListener(e, wait, { passive: true }));
+    $$('button', box).forEach(b => b.addEventListener('click', () => { wait(); go(at() + (b.dataset.d === 'next' ? 1 : -1)); }));
+    let seen = false; new IntersectionObserver(es => seen = es[0].isIntersecting, { threshold: .4 }).observe(box);
+    setInterval(() => { if (seen && !document.hidden && Date.now() > hold && box.offsetParent) go(at() + 1, true); }, 4500);
+  });
+
   // Reviews wall: touch to pause
   $$('.wall').forEach(w => { w.addEventListener('touchstart', () => w.classList.add('hold'), { passive: true }); w.addEventListener('touchend', () => setTimeout(() => w.classList.remove('hold'), 2500)); });
 
