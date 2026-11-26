@@ -1162,3 +1162,27 @@ h1, h2, h3 { overflow-wrap: break-word; }
   .fl-go i { width: 30px; height: 30px; border-width: 1.5px; box-shadow: none; } .fl-go i::after { display: none; } .fl-go i::before { width: 9px; height: 9px; border-width: 2px; transform: translateY(2px) rotate(45deg); }
   .fl-go span { background: none; padding: 0; font-size: 12.5px; }
 }
+
+/* Walk-through v4 (26 Nov 2026): no floor plan. Rooms are picked from a strip of thumbnails; lighting has four stops. */
+.floor.noplan { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.floor.noplan .fl-view { min-height: 0; aspect-ratio: 16 / 9; }
+.fl-shot img.lt { opacity: 0; transition: opacity .4s; }
+.fl-shot.on img.lt.show { opacity: 1; }
+.fl-under { display: grid; gap: 12px; min-width: 0; }
+.fl-lights { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.fl-lights[hidden] { display: none; }
+.fl-lights span { font: 600 13px/1 var(--body); color: var(--txt2); margin-right: 6px; }
+.fl-lights button { border: 0; border-radius: 999px; min-height: 40px; padding: 0 14px; font: 600 13px/1 var(--body); background: var(--card, #fff); color: var(--txt); box-shadow: inset 0 0 0 1px var(--line); cursor: pointer; }
+.fl-lights button[aria-pressed="true"] { background: var(--txt); color: var(--paper); box-shadow: none; }
+.fl-stops { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; padding: 2px; margin: -2px; }
+.fl-stops::-webkit-scrollbar { display: none; }
+.fl-stop { flex: none; width: 132px; border: 0; padding: 0; background: none; color: var(--txt); cursor: pointer; display: grid; gap: 6px; text-align: left; font: 600 13px/1.2 var(--body); scroll-snap-align: start; }
+.fl-stop img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 12px; opacity: .72; transition: opacity .25s, box-shadow .25s; }
+.fl-stop:hover img, .fl-stop:focus-visible img { opacity: 1; }
+.fl-stop.on img { opacity: 1; box-shadow: 0 0 0 3px var(--accent); }
+.fl-stop.seen:not(.on) span { color: var(--txt2); }
+@media (max-width: 620px) { .floor.noplan .fl-view { aspect-ratio: 4 / 4.3; } .fl-stop { width: 108px; } .fl-lights button { padding: 0 12px; } }
+.floor.noplan.full { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; padding: 10px; gap: 10px; }
+.floor.noplan.full .fl-view { aspect-ratio: auto; }
+.floor.noplan.full .fl-under { color: #eceef1; --txt: #eceef1; --txt2: #b9bcc3; --card: #17171a; --line: rgba(255,255,255,.18); --paper: #0b0b0c; }
+.floor.noplan.full .fine { display: none; }

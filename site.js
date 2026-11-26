@@ -141,10 +141,15 @@
 
   // Walk-through: arrows in the photo walk you to the next room, the marker follows on the plan, the photo moves forward
   $$('[data-floor]').forEach(fl => {
-    const view = $('.fl-view', fl), shots = $$('.fl-shot', fl), dots = $$('.fl-dot', fl), you = $('.fl-you', fl), live = $('.fl-live', fl), play = $('.fl-play', fl), full = $('.fl-full', fl), light = $('.fl-light', fl), mv = $('.fl-mv', fl), gen = $('.fl-gen', fl);
+    const view = $('.fl-view', fl), shots = $$('.fl-shot', fl), dots = $$('.fl-stop', fl), lights = $('.fl-lights', fl), live = $('.fl-live', fl), play = $('.fl-play', fl), full = $('.fl-full', fl), mv = $('.fl-mv', fl), gen = $('.fl-gen', fl);
     let cur = 0, timer = null, moving = false;
     const note = t => { if (gen) { gen.textContent = t; gen.hidden = !t; } };
-    const setLight = on => { if (!light) return; view.classList.toggle('usenight', on); light.setAttribute('aria-pressed', String(on)); light.textContent = on ? 'Lighting: day' : 'Lighting: night'; note(on ? 'Lighting preview, generated' : ''); };
+    // Lighting preview: day is the real photo, the others are generated from it and load when first picked.
+    const setLight = k => { if (!lights) return; const sh = shots[cur];
+      $$('img.lt', sh).forEach(im => { const on = im.dataset.lt === k; if (on && !im.src) im.src = im.dataset.src; im.classList.toggle('show', on); });
+      $$('button', lights).forEach(b => b.setAttribute('aria-pressed', String(b.dataset.light === k)));
+      view.dataset.light = k; note(k === 'day' ? '' : 'Lighting preview, generated'); };
+    const lightsFor = d => { if (!lights) return; const has = (d.dataset.lights || '').split(' ').filter(Boolean); lights.hidden = !has.length; $$('button', lights).forEach(b => b.hidden = b.dataset.light !== 'day' && !has.includes(b.dataset.light)); };
     // A generated move between two stops: play it, then land on the real photo of the next stop.
     const move = (i, b) => { moving = true; let done = false;
       const end = () => { if (done) return; done = true; clearTimeout(guard); land(i); requestAnimationFrame(() => { view.classList.remove('mv'); moving = false; }); };
@@ -154,7 +159,7 @@
       const p = mv.play(); view.classList.add('mv'); if (p && p.catch) p.catch(end); };
     const go = (i, from) => {
       i = (i + dots.length) % dots.length; if (i === cur || moving) return;
-      if (from && from.dataset.mv && mv && !calm && !view.classList.contains('usenight')) return move(i, from);
+      if (from && from.dataset.mv && mv && !calm) { setLight('day'); return move(i, from); }
       land(i, from); };
     const land = (i, from) => {
       const d = dots[i], old = shots[cur];
@@ -162,14 +167,14 @@
       if (from) { old.style.setProperty('--ox', from.dataset.ox + '%'); old.style.setProperty('--oy', from.dataset.oy + '%'); } else { old.style.setProperty('--ox', '50%'); old.style.setProperty('--oy', '55%'); }
       old.classList.add('leave'); old.classList.remove('on'); shots[i].classList.add('on');
       dots.forEach((x, j) => { x.classList.toggle('on', j === i); x.classList.toggle('seen', x.classList.contains('seen') || j === cur); });
-      you.style.left = d.style.left; you.style.top = d.style.top; you.style.setProperty('--r', d.dataset.r + 'deg');
+      const st = d.parentElement; st.scrollTo({ left: d.offsetLeft - st.offsetLeft - st.clientWidth / 2 + d.clientWidth / 2, behavior: calm ? 'auto' : 'smooth' });
       $('[data-fl-n]', fl).textContent = i + 1; $('[data-fl-k]', fl).textContent = d.dataset.k; $('[data-fl-t]', fl).textContent = d.dataset.t;
       view.classList.remove('uselive'); live.setAttribute('aria-pressed', 'false'); live.textContent = 'See it in use'; live.hidden = !d.dataset.live;
-      setLight(false); if (light) light.hidden = !d.dataset.night;
-      cur = i;
+      $$('img.lt.show', old).forEach(im => im.classList.remove('show'));
+      cur = i; setLight('day'); lightsFor(d);
     };
     const stop = () => { clearInterval(timer); timer = null; play.setAttribute('aria-pressed', 'false'); play.textContent = '▶ Play the walk-through'; };
-    live.hidden = !dots[0].dataset.live; if (light) { light.hidden = !dots[0].dataset.night; light.addEventListener('click', () => setLight(!view.classList.contains('usenight'))); }
+    live.hidden = !dots[0].dataset.live; if (lights) { lightsFor(dots[0]); $$('button', lights).forEach(b => b.addEventListener('click', () => { stop(); setLight(b.dataset.light); })); }
     dots.forEach((d, i) => d.addEventListener('click', () => { stop(); go(i); }));
     $$('[data-fl]', fl).forEach(b => b.addEventListener('click', () => { stop(); go(cur + +b.dataset.fl); }));
     $$('.fl-go button', fl).forEach(b => b.addEventListener('click', () => { stop(); go(+b.dataset.to, b); }));
