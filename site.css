@@ -1217,3 +1217,5 @@ h1, h2, h3 { overflow-wrap: break-word; }
 .wt.full .wt-view { aspect-ratio: auto; border-radius: 12px; }
 .wt.full .wt-v { object-fit: contain; }
 .wt.full .fine { display: none; }
+
+.wt-rooms[hidden] { display: none; }
