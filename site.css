@@ -1346,3 +1346,12 @@ h3 { font-size: clamp(19px, 2.2vw, 24px); }
   .ws-rail { position: absolute; left: 0; right: 0; top: 78px; padding: 0 16px; }
   .ws-rail button i { background: rgba(255,255,255,.38); }
 }
+
+/* Scroll walk-through v3 (27 Nov 2026): no words on the picture. Room names stay for screen readers only. */
+.ws-caps { display: none; }
+.ws-rail { padding: 0; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; gap: 6px; }
+.ws-rail button { min-width: 44px; }
+.ws-rail button span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.ws-rail button i { background: rgba(255,255,255,.45); box-shadow: 0 0 0 1px rgba(0,0,0,.15); }
+.ws-shade { background: radial-gradient(120% 90% at 50% 45%, rgba(0,0,0,0) 58%, rgba(0,0,0,.34) 100%), linear-gradient(to bottom, rgba(0,0,0,.38), rgba(0,0,0,0) 20%); }
+@media (max-aspect-ratio: 1/1) { .ws-rail { padding: 0 16px; } .ws-rail button { min-width: 0; } }
