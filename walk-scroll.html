@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Walk through Fitaz Gym | scroll test</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0b0b0c">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="https://unpkg.com/lenis@1.1.14/dist/lenis.css">
+<style>
+/* Scroll walk-through test (27 Nov 2026). The walk-through video, cut into frames and moved by the scroll. */
+body { background: #0b0b0c; color: #f6f5f1; margin: 0; }
+.ws-top { position: fixed; z-index: 30; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; padding-top: max(14px, env(safe-area-inset-top)); pointer-events: none; }
+.ws-top a { pointer-events: auto; color: #fff; text-decoration: none; font: 600 14px/1 var(--body); padding: 12px 16px; border-radius: 999px; background: rgba(11,11,12,.55); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.ws-intro { min-height: 82svh; display: grid; align-content: end; gap: 18px; padding: 120px 20px 56px; max-width: 1180px; margin: 0 auto; }
+.ws-intro h1 { font-style: normal; font-size: clamp(44px, 9vw, 120px); color: #fff; }
+.ws-intro p { margin: 0; max-width: 34ch; font: 400 18px/1.45 var(--body); color: #b9bcc3; }
+.ws-hint { display: inline-flex; align-items: center; gap: 10px; font: 600 14px/1 var(--body); color: #fff; }
+.ws-hint i { width: 22px; height: 34px; border-radius: 12px; box-shadow: inset 0 0 0 2px rgba(255,255,255,.7); position: relative; }
+.ws-hint i::after { content: ""; position: absolute; left: 50%; top: 7px; width: 4px; height: 7px; margin-left: -2px; border-radius: 2px; background: #fff; animation: wsdot 1.6s ease-in-out infinite; }
+@keyframes wsdot { 0% { transform: translateY(0); opacity: 1; } 70% { transform: translateY(10px); opacity: 0; } 100% { transform: translateY(0); opacity: 0; } }
+
+.ws { position: relative; background: #0b0b0c; }
+.ws-stage { position: relative; height: 100vh; height: 100svh; overflow: hidden; background: #0b0b0c; }
+.ws-frame { position: absolute; inset: 0; overflow: hidden; will-change: clip-path; }
+.ws-frame canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.ws-shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.78), rgba(0,0,0,0) 46%), linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,0) 22%); pointer-events: none; }
+.ws-caps { position: absolute; left: clamp(20px, 5vw, 72px); right: clamp(84px, 16vw, 260px); bottom: clamp(28px, 7vh, 72px); height: 190px; pointer-events: none; }
+.ws-cap { position: absolute; left: 0; bottom: 0; display: grid; gap: 10px; opacity: 0; }
+.ws-cap .n { font: 600 14px/1 var(--body); color: rgba(255,255,255,.75); font-variant-numeric: tabular-nums; }
+.ws-cap b { font-family: var(--display); font-weight: 800; font-stretch: 118%; text-transform: uppercase; letter-spacing: -.015em; line-height: .94; font-size: clamp(40px, 6.4vw, 96px); color: #fff; }
+.ws-cap span { font: 400 18px/1.4 var(--body); color: rgba(255,255,255,.88); max-width: 38ch; }
+.ws-rail { position: absolute; right: clamp(16px, 4vw, 56px); top: 50%; transform: translateY(-50%); display: grid; gap: 2px; padding: 10px 16px; border-radius: 20px; background: rgba(11,11,12,.5); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.ws-rail button { display: flex; align-items: center; justify-content: flex-end; gap: 12px; min-height: 44px; padding: 0; border: 0; background: none; color: rgba(255,255,255,.72); font: 600 13px/1 var(--body); cursor: pointer; transition: color .25s; }
+.ws-rail button i { width: 3px; height: 30px; border-radius: 2px; background: rgba(255,255,255,.3); overflow: hidden; position: relative; }
+.ws-rail button i::after { content: ""; position: absolute; inset: 0; background: var(--accent); transform: scaleY(var(--p, 0)); transform-origin: top; }
+.ws-rail button.on { color: #fff; }
+.ws-skip { position: absolute; left: clamp(20px, 5vw, 72px); top: max(74px, calc(env(safe-area-inset-top) + 64px)); color: #fff; font: 600 14px/1 var(--body); text-decoration: underline; text-underline-offset: 4px; opacity: .8; }
+
+/* Phone and any tall screen: the picture keeps its shape (no heavy crop), words sit under it. */
+@media (max-aspect-ratio: 1/1) {
+  .ws-stage { display: grid; grid-template-rows: .7fr auto auto 1.3fr; }
+  .ws-frame { position: relative; inset: auto; grid-row: 2; width: 100%; aspect-ratio: 4 / 3; }
+  .ws-shade { display: none; }
+  .ws-caps { position: relative; grid-row: 4; left: auto; right: auto; bottom: auto; height: auto; margin: 22px 20px 0; }
+  .ws-cap { bottom: auto; top: 0; }
+  .ws-cap b { font-size: clamp(38px, 11vw, 56px); }
+  .ws-cap span { font-size: 17px; }
+  .ws-rail { position: relative; grid-row: 3; right: auto; top: auto; transform: none; display: flex; gap: 6px; padding: 14px 20px 0; border-radius: 0; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .ws-rail button { flex: 1; min-height: 28px; align-items: flex-start; }
+  .ws-rail button span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .ws-rail button i { width: 100%; height: 3px; }
+  .ws-rail button i::after { transform: scaleX(var(--p, 0)); transform-origin: left; }
+  .ws-skip { top: auto; bottom: max(18px, env(safe-area-inset-bottom)); left: 20px; }
+}
+
+.ws-out { min-height: 80svh; display: grid; align-content: center; justify-items: start; gap: 22px; padding: 80px 20px; max-width: 1180px; margin: 0 auto; }
+.ws-out h2 { font-style: normal; font-size: clamp(36px, 6vw, 80px); color: #fff; }
+.ws-out p { margin: 0; font: 400 18px/1.45 var(--body); color: #b9bcc3; max-width: 36ch; }
+.ws-out .row { display: flex; flex-wrap: wrap; gap: 10px; }
+.ws-out .btn.ghost { background: none; color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.35); }
+
+/* People who ask for less motion get the plain video instead. */
+.ws-plain { display: none; max-width: 1180px; margin: 0 auto; padding: 0 20px 40px; }
+.ws-plain video { width: 100%; border-radius: 16px; display: block; }
+.calm .ws { display: none; } .calm .ws-plain { display: block; } .calm .ws-hint { display: none; }
+</style>
+</head>
+<body>
+<div class="ws-top"><a href="index.html">← Fitaz Gym</a><a href="index.html#contact-form">Book a tour</a></div>
+
+<header class="ws-intro">
+  <h1>Walk through the gym</h1>
+  <p>Scroll, and you walk from the front desk to the machine room.</p>
+  <span class="ws-hint"><i aria-hidden="true"></i>Scroll to start</span>
+</header>
+
+<section class="ws" id="walk" aria-label="Scroll walk-through of Fitaz Gym">
+  <div class="ws-stage">
+    <div class="ws-frame"><canvas aria-hidden="true"></canvas><div class="ws-shade"></div></div>
+    <div class="ws-rail" role="group" aria-label="Jump to a room"></div>
+    <div class="ws-caps" aria-live="polite"></div>
+    <a class="ws-skip" href="#after-walk">Skip the walk</a>
+  </div>
+</section>
+
+<div class="ws-plain"><video controls muted playsinline preload="none" poster="img/tour/walk-poster.jpg" src="img/tour/walk.mp4" aria-label="Video walk-through of Fitaz Gym"></video></div>
+
+<section class="ws-out" id="after-walk">
+  <h2>Now see it in person</h2>
+  <p>101 Main Street, Kangaroo Point. Come in and we will show you around.</p>
+  <div class="row"><a class="btn" href="index.html#contact-form">Book a tour</a><a class="btn ghost" href="memberships.html">See memberships</a></div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+<script>
+(() => {
+  // Rooms in walking order. "at" is where each room sits along the walk, 0 to 1 (from the video's room times).
+  const ROOMS = [
+    { k: 'Front desk', t: 'Say hi, grab a tour, check in on the app.', at: 0.025 },
+    { k: 'Class floor', t: 'Timber floor and the long rig. Coached classes run here.', at: 0.256 },
+    { k: 'Turf and rigs', t: 'The sprint track, sleds and pull-up rigs.', at: 0.486 },
+    { k: 'Racks and platforms', t: 'Squat racks, benches and plates. Open 24/7.', at: 0.717 },
+    { k: 'Machine room', t: 'Pin-loaded machines in the quiet front room, facing the street.', at: 0.947 }
+  ];
+  const FRAMES = 190, LENGTH = 4.2; // LENGTH = how many screens of scrolling the walk lasts
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches || !window.gsap || !window.ScrollTrigger;
+  if (calm) { document.documentElement.classList.add('calm'); return; }
+
+  const stage = document.querySelector('.ws-stage'), frame = document.querySelector('.ws-frame'), canvas = frame.querySelector('canvas'), ctx = canvas.getContext('2d');
+  const caps = document.querySelector('.ws-caps'), rail = document.querySelector('.ws-rail');
+  ROOMS.forEach((r, i) => {
+    const c = document.createElement('div'); c.className = 'ws-cap';
+    const n = document.createElement('span'); n.className = 'n'; n.textContent = String(i + 1).padStart(2, '0') + ' / ' + String(ROOMS.length).padStart(2, '0');
+    const b = document.createElement('b'); b.textContent = r.k;
+    const s = document.createElement('span'); s.textContent = r.t;
+    c.append(n, b, s); caps.append(c); r.cap = c;
+    const btn = document.createElement('button'); btn.type = 'button';
+    const l = document.createElement('span'); l.textContent = r.k; const bar = document.createElement('i');
+    btn.append(l, bar); rail.append(btn); r.btn = btn; r.bar = bar;
+  });
+
+  // Frames: a small set for phones, a large set for big screens. Loaded coarse first, then filled in.
+  const big = Math.max(innerWidth, innerHeight) * Math.min(devicePixelRatio || 1, 2) > 1400;
+  const src = i => 'img/tour/seq/' + (big ? 'l' : 's') + '/f' + String(i + 1).padStart(3, '0') + '.jpg';
+  const imgs = new Array(FRAMES), ready = new Array(FRAMES).fill(false);
+  let want = 0, shown = -1, cw = 0, ch = 0;
+  const nearest = i => { for (let d = 0; d < FRAMES; d++) { if (ready[i - d]) return i - d; if (ready[i + d]) return i + d; } return -1; };
+  const draw = force => {
+    const i = nearest(want); if (i < 0 || (i === shown && !force)) return; shown = i;
+    const im = imgs[i], s = Math.max(cw / im.naturalWidth, ch / im.naturalHeight), w = im.naturalWidth * s, h = im.naturalHeight * s;
+    ctx.drawImage(im, (cw - w) / 2, (ch - h) / 2, w, h);
+  };
+  const load = i => new Promise(done => { if (imgs[i]) return done(); const im = imgs[i] = new Image(); im.decoding = 'async';
+    im.onload = () => { ready[i] = true; if (Math.abs(i - want) < 12) draw(true); done(); }; im.onerror = done; im.src = src(i); });
+  const order = []; [16, 8, 4, 2, 1].forEach(step => { for (let i = 0; i < FRAMES; i += step) if (!order.includes(i)) order.push(i); });
+  let started = false;
+  const loadAll = async () => { if (started) return; started = true; let q = order.slice();
+    const worker = async () => { while (q.length) await load(q.shift()); };
+    await Promise.all([worker(), worker(), worker(), worker(), worker(), worker()]); };
+  load(0);
+  new IntersectionObserver((es, io) => { if (es.some(e => e.isIntersecting)) { io.disconnect(); loadAll(); } }, { rootMargin: '150% 0px' }).observe(stage);
+
+  // Canvas size is measured on resize only, never while scrolling.
+  const size = () => { const r = frame.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2); cw = canvas.width = Math.round(r.width * d); ch = canvas.height = Math.round(r.height * d); draw(true); };
+  new ResizeObserver(size).observe(frame);
+
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+
+  // Lenis smooths the wheel and trackpad. GSAP's ticker is the one clock that drives it.
+  let lenis = null;
+  if (window.Lenis) {
+    lenis = new Lenis({ anchors: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+    ScrollTrigger.addEventListener('refresh', () => lenis.resize()); // the pinned section adds height, so Lenis re-measures
+  }
+
+  // The picture opens up from a rounded card to the full stage as the section arrives.
+  gsap.fromTo(frame, { clipPath: 'inset(7% 6% 7% 6% round 28px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'none',
+    scrollTrigger: { trigger: stage, start: 'top bottom', end: 'top top', scrub: true } });
+
+  // The walk: the stage is pinned and the scroll moves through the frames.
+  let room = -1;
+  const setRoom = (i, dir) => { if (i === room) return; const old = ROOMS[room]; room = i;
+    if (old) gsap.to(old.cap, { opacity: 0, y: dir > 0 ? -24 : 24, duration: .3, ease: 'power2.in', overwrite: true });
+    gsap.fromTo(ROOMS[i].cap, { opacity: 0, y: dir > 0 ? 32 : -32 }, { opacity: 1, y: 0, duration: .55, ease: 'power3.out', delay: old ? .12 : 0, overwrite: true });
+    ROOMS.forEach((r, j) => r.btn.classList.toggle('on', j === i)); };
+  const state = { f: 0 };
+  let walk = null;
+  walk = gsap.to(state, { f: FRAMES - 1, ease: 'none',
+    scrollTrigger: { id: 'walk', trigger: stage, start: 'top top', end: () => '+=' + Math.round(innerHeight * LENGTH), pin: true, scrub: .45, anticipatePin: 1, invalidateOnRefresh: true },
+    onUpdate: () => {
+      want = Math.round(state.f); draw();
+      const p = state.f / (FRAMES - 1), dir = walk && walk.scrollTrigger ? walk.scrollTrigger.direction : 1;
+      let i = 0; ROOMS.forEach((r, j) => { if (j && p >= (r.at + ROOMS[j - 1].at) / 2) i = j; });
+      setRoom(i, dir);
+      ROOMS.forEach((r, j) => { const a = j ? (r.at + ROOMS[j - 1].at) / 2 : 0, b = j < ROOMS.length - 1 ? (r.at + ROOMS[j + 1].at) / 2 : 1;
+        r.bar.style.setProperty('--p', Math.max(0, Math.min(1, (p - a) / (b - a))).toFixed(3)); });
+    } });
+  setRoom(0, 1);
+
+  // Tap a room on the rail to walk straight to it.
+  ROOMS.forEach(r => r.btn.addEventListener('click', () => { const st = walk.scrollTrigger, y = st.start + (st.end - st.start) * r.at;
+    if (lenis) lenis.scrollTo(y, { duration: 1.4 }); else scrollTo({ top: y, behavior: 'smooth' }); }));
+  addEventListener('load', () => { ScrollTrigger.refresh();
+    // Test hook: ?at=0.5 opens the page half way through the walk.
+    const q = /[?&]at=([\d.]+)/.exec(location.search); if (q) { const st = walk.scrollTrigger, y = st.start + (st.end - st.start) * +q[1]; if (lenis) { lenis.resize(); lenis.scrollTo(y, { immediate: true, force: true }); } else scrollTo(0, y); } });
+})();
+</script>
+</body>
+</html>
