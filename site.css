@@ -1219,3 +1219,12 @@ h1, h2, h3 { overflow-wrap: break-word; }
 .wt.full .fine { display: none; }
 
 .wt-rooms[hidden] { display: none; }
+
+/* Reviews v3 (26 Nov 2026): one swipe row at every width, nothing moves by itself. */
+.revm { display: block; margin: 20px 0 18px; }
+.revm-track { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 0 var(--pad); scroll-padding: 0 var(--pad); }
+.revm-track::-webkit-scrollbar { display: none; }
+.revm-track .rv { flex: none; scroll-snap-align: start; width: min(84vw, 360px); }
+.revm-nav { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 14px; color: rgba(255,255,255,.8); font: 600 14px/1 var(--body); }
+.revm-nav button { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); background: none; color: #fff; font-size: 18px; cursor: pointer; }
+.revm-nav span { min-width: 56px; text-align: center; font-variant-numeric: tabular-nums; }
