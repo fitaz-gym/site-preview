@@ -1264,3 +1264,29 @@ h1, h2, h3 { overflow-wrap: break-word; }
 /* 26 Nov 2026: the floating Chat now button uses the accent colour. */
 :root .chat-fab, :root[data-mode="silver"] .chat-fab { background: var(--accent); background-image: none; color: var(--accent-ink); box-shadow: 0 12px 30px -12px var(--accent); }
 :root[data-accent="silver"] .chat-fab { background: var(--silver); color: #0b0b0c; }
+
+/* ===== Review rounds 1 and 2 (27 Nov 2026) ===== */
+/* Round 1. One type voice: nothing italic; card titles are plain bold in the body font. */
+h1, h2, h3, .disp, .band h2, .rev-head h2, .sheet a.big, .mq .track, .stat b, .price b, .hourscard .big, .tagline, .m-offer b { font-style: normal; }
+h3, .opt .t, .tr b, .tile b, .stop b, .res-card b, .facts4 b, .recap b[data-s="name"], .sum .what b, .m-grid b, .chipsrow button b, .cb-top b {
+  font-family: var(--body); font-style: normal; font-stretch: normal; text-transform: none; font-weight: 700; letter-spacing: -.01em; line-height: 1.15; }
+h3 { font-size: clamp(19px, 2.2vw, 24px); }
+.plan h3, .style h3, .pill3 h3 { font-size: clamp(24px, 3vw, 30px); }
+.pass h3, .term h3 { font-size: 19px; }
+.tr b, .tile b, .facts4 b, .res-card b { font-size: 18px; }
+/* The small spaced-out capital labels that stay become ordinary small text. */
+.eyebrow:not(.gline), .blocks .w { text-transform: none; letter-spacing: 0; font-size: 14px; font-weight: 600; }
+.step > .q b { display: none; }
+/* Round 2. A short contact block on every page but the home page. */
+.talk.mini { padding: clamp(28px, 4vw, 44px) 0; }
+.talk.mini .wrap { display: grid; gap: 14px; }
+.talk.mini h2 { font-size: clamp(22px, 3vw, 30px); }
+.talk-line { display: flex; flex-wrap: wrap; gap: 8px 10px; margin: 0; }
+.talk-line a, .talk-line button { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 0; box-shadow: inset 0 0 0 1px rgba(255,255,255,.28); background: none; color: #fff; font: 600 15px/1 var(--body); text-decoration: none; cursor: pointer; }
+.talk-line button { background: var(--accent); color: var(--accent-ink); box-shadow: none; }
+/* Footer: two short columns of links, no headings. */
+@media (min-width: 760px) { .ftr .cols { grid-template-columns: 1.6fr 1fr 1fr; } }
+@media (max-width: 759px) { .ftr .cols > div:last-child { grid-column: auto; } }
+/* Two backgrounds: the page colour and black. The lilac and stone bands are gone. */
+.joinsec, .sec.wine, section.wine { background: none; }
+:root .thero h1, :root[data-mode="silver"] .thero h1 { color: inherit; -webkit-text-fill-color: currentColor; }
