@@ -1,0 +1,2 @@
+lenis 1.3.4
+gsap 3.12.5 (gsap.min.js, ScrollTrigger.min.js) from cdnjs, 27 Nov 2026

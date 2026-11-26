@@ -1290,3 +1290,44 @@ h3 { font-size: clamp(19px, 2.2vw, 24px); }
 /* Two backgrounds: the page colour and black. The lilac and stone bands are gone. */
 .joinsec, .sec.wine, section.wine { background: none; }
 :root .thero h1, :root[data-mode="silver"] .thero h1 { color: inherit; -webkit-text-fill-color: currentColor; }
+
+/* ===== Scroll walk-through on the home page (27 Nov 2026). Always dark, whatever the page theme. ===== */
+.ws { position: relative; background: #0b0b0c; color: #f6f5f1; }
+.ws-head { padding-top: clamp(56px, 9vw, 110px); padding-bottom: clamp(28px, 4vw, 48px); display: grid; gap: 14px; }
+.ws-head h2 { color: #fff; }
+.ws-head .lede { color: #b9bcc3; margin: 0; }
+.ws-stage { display: none; position: relative; height: 100vh; height: 100svh; overflow: hidden; background: #0b0b0c; }
+.ws.ws-on .ws-stage { display: block; }
+.ws-plain { padding-bottom: clamp(40px, 6vw, 72px); }
+.ws-plain video { width: 100%; border-radius: 16px; display: block; }
+.ws.ws-on .ws-plain { display: none; }
+.ws-frame { position: absolute; inset: 0; overflow: hidden; will-change: clip-path; }
+.ws-frame canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.ws-shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.78), rgba(0,0,0,0) 46%), linear-gradient(to bottom, rgba(0,0,0,.4), rgba(0,0,0,0) 24%); pointer-events: none; }
+.ws-caps { position: absolute; left: clamp(20px, 5vw, 72px); right: clamp(84px, 16vw, 260px); bottom: clamp(28px, 7vh, 72px); height: 190px; pointer-events: none; }
+.ws-cap { position: absolute; left: 0; bottom: 0; display: grid; gap: 10px; opacity: 0; }
+.ws-cap .n { font: 600 14px/1 var(--body); color: rgba(255,255,255,.75); font-variant-numeric: tabular-nums; }
+.ws-cap b { font-family: var(--display); font-weight: 800; font-stretch: 118%; text-transform: uppercase; letter-spacing: -.015em; line-height: .94; font-size: clamp(40px, 6.4vw, 96px); color: #fff; }
+.ws-cap span:not(.n) { font: 400 18px/1.4 var(--body); color: rgba(255,255,255,.88); max-width: 38ch; }
+.ws-rail { position: absolute; right: clamp(16px, 4vw, 56px); top: 50%; transform: translateY(-50%); display: grid; gap: 2px; padding: 10px 16px; border-radius: 20px; background: rgba(11,11,12,.5); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.ws-rail button { display: flex; align-items: center; justify-content: flex-end; gap: 12px; min-height: 44px; padding: 0; border: 0; background: none; color: rgba(255,255,255,.72); font: 600 13px/1 var(--body); cursor: pointer; transition: color .25s; }
+.ws-rail button i { width: 3px; height: 30px; border-radius: 2px; background: rgba(255,255,255,.3); overflow: hidden; position: relative; }
+.ws-rail button i::after { content: ""; position: absolute; inset: 0; background: var(--accent); transform: scaleY(var(--p, 0)); transform-origin: top; }
+.ws-rail button.on { color: #fff; }
+.ws-skip { position: absolute; left: clamp(20px, 5vw, 72px); top: 84px; color: #fff; font: 600 14px/1 var(--body); text-decoration: underline; text-underline-offset: 4px; padding: 10px 0; }
+/* Phone and any tall screen: the picture keeps its shape (no heavy crop), the words sit under it, clear of the join bar. */
+@media (max-aspect-ratio: 1/1) {
+  .ws.ws-on .ws-stage { display: grid; grid-template-rows: .8fr auto auto 1.2fr; }
+  .ws-frame { position: relative; inset: auto; grid-row: 2; width: 100%; aspect-ratio: 4 / 3; }
+  .ws-shade { display: none; }
+  .ws-caps { position: relative; grid-row: 4; left: auto; right: auto; bottom: auto; height: auto; margin: 22px 20px 0; }
+  .ws-cap { bottom: auto; top: 0; }
+  .ws-cap b { font-size: clamp(38px, 11vw, 56px); }
+  .ws-cap span:not(.n) { font-size: 17px; }
+  .ws-rail { position: relative; grid-row: 3; right: auto; top: auto; transform: none; display: flex; gap: 6px; padding: 14px 20px 0; border-radius: 0; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .ws-rail button { flex: 1; min-height: 28px; align-items: flex-start; }
+  .ws-rail button span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .ws-rail button i { width: 100%; height: 3px; }
+  .ws-rail button i::after { transform: scaleX(var(--p, 0)); transform-origin: left; }
+  .ws-skip { top: 76px; left: 20px; }
+}
