@@ -112,11 +112,23 @@
   paint();
 
   const go = y => { hush(2200); if (lenis) { lenis.resize(); lenis.scrollTo(y, { duration: 1.4, force: true }); } else scrollTo({ top: y, behavior: 'smooth' }); };
-  ROOMS.forEach(r => r.btn.addEventListener('click', () => { const st = walk.scrollTrigger; go(st.start + (st.end - st.start) * r.at); }));
+  ROOMS.forEach(r => r.btn.addEventListener('click', () => { if (!walk) return; const st = walk.scrollTrigger; go(st.start + (st.end - st.start) * r.at); }));
+
+  // The walk plays once. When it has gone off the top of the screen, the pin and its scroll distance are taken out
+  // (the scroll position is corrected in the same frame, so nothing moves), and scrolling back up is a normal page:
+  // the picture is one still screen, not a walk to scrub back through.
+  let done = false;
+  const once = () => { const st = walk && walk.scrollTrigger; if (done || !st || skipping || scrollY < st.end + innerHeight * 1.1) return;
+    done = true; removeEventListener('scroll', once);
+    const d = st.end - st.start, y = scrollY - d, rest = lenis ? lenis.targetScroll - lenis.scroll : 0;
+    st.kill(true); walk.kill(); walk = null; state.f = FRAMES - 1; paint();
+    if (lenis) { lenis.resize(); lenis.scrollTo(y, { immediate: true, force: true }); if (Math.abs(rest) > 2) lenis.scrollTo(y + rest, { force: true }); } else scrollTo(0, y);
+    ScrollTrigger.refresh(); };
+  addEventListener('scroll', once, { passive: true });
 
   // Pages above this section finish loading images after start-up, so positions are measured again.
   addEventListener('load', () => { ScrollTrigger.refresh();
     // Test hook: ?at=0.5 opens the page half way through the walk.
-    const q = /[?&]at=([\d.]+)/.exec(location.search); if (q) { hush(3000); const st = walk.scrollTrigger, y = st.start + (st.end - st.start) * +q[1]; if (lenis) { lenis.resize(); lenis.scrollTo(y, { immediate: true, force: true }); } else scrollTo(0, y); } });
+    const q = /[?&]at=([\d.]+)/.exec(location.search); if (q && walk) { hush(3000); const st = walk.scrollTrigger, y = st.start + (st.end - st.start) * +q[1]; if (lenis) { lenis.resize(); lenis.scrollTo(y, { immediate: true, force: true }); } else scrollTo(0, y); } });
   if ('ResizeObserver' in window) { let h = 0, t = 0; new ResizeObserver(() => { const n = document.body.scrollHeight; if (Math.abs(n - h) > 4) { h = n; clearTimeout(t); t = setTimeout(() => ScrollTrigger.refresh(), 250); } }).observe(document.body); }
 })();
