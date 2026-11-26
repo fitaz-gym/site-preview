@@ -22,9 +22,10 @@
     btn.append(l, bar); rail.append(btn); r.btn = btn; r.bar = bar;
   });
 
-  // Frames: a small set for phones, a large set for big screens. Loaded coarse first, then filled in.
-  const big = Math.max(innerWidth, innerHeight) * Math.min(devicePixelRatio || 1, 2) > 1400;
-  const src = i => base + '/' + (big ? 'l' : 's') + '/f' + String(i + 1).padStart(3, '0') + '.jpg';
+  // Frames: a tall set cut for phones held upright (p), a small wide set (s), a large wide set for big screens (l).
+  // Loaded coarse first, then filled in.
+  const tall = matchMedia('(max-aspect-ratio: 1/1)').matches, big = Math.max(innerWidth, innerHeight) * Math.min(devicePixelRatio || 1, 2) > 1400;
+  const src = i => base + '/' + (tall ? 'p' : big ? 'l' : 's') + '/f' + String(i + 1).padStart(3, '0') + '.jpg';
   const imgs = new Array(FRAMES), ready = new Array(FRAMES).fill(false);
   let want = 0, shown = -1, cw = 0, ch = 0;
   const nearest = i => { for (let d = 0; d < FRAMES; d++) { if (ready[i - d]) return i - d; if (ready[i + d]) return i + d; } return -1; };
@@ -65,6 +66,29 @@
   gsap.fromTo(frame, { clipPath: 'inset(7% 6% 7% 6% round 28px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'none',
     scrollTrigger: { trigger: stage, start: 'top bottom', end: 'top top', scrub: true } });
 
+  // Depth. The picture sits a touch oversized so it can move: it pushes in while you scroll (faster scroll, more push)
+  // and, with a mouse, leans a couple of degrees toward the pointer.
+  gsap.set(canvas, { scale: 1.05, transformPerspective: 1100, transformOrigin: '50% 55%' });
+  const zoomTo = gsap.quickTo(canvas, 'scale', { duration: .7, ease: 'power2.out' });
+  ScrollTrigger.addEventListener('scrollEnd', () => zoomTo(1.05));
+  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const rx = gsap.quickTo(canvas, 'rotationX', { duration: .9, ease: 'power3.out' }), ry = gsap.quickTo(canvas, 'rotationY', { duration: .9, ease: 'power3.out' });
+    const tx = gsap.quickTo(canvas, 'x', { duration: .9, ease: 'power3.out' }), ty = gsap.quickTo(canvas, 'y', { duration: .9, ease: 'power3.out' });
+    stage.addEventListener('pointermove', e => { const a = e.clientX / innerWidth - .5, b = e.clientY / innerHeight - .5; ry(a * 3.2); rx(-b * 2.4); tx(-a * 22); ty(-b * 14); });
+    stage.addEventListener('pointerleave', () => { rx(0); ry(0); tx(0); ty(0); });
+  }
+  // A hard, fast scroll is someone trying to get past, so it carries them straight out of the walk.
+  const FAST = 5500; let skipping = false, quiet = performance.now() + 1500; // quiet: ignore speed from our own jumps and from page load
+  const hush = ms => { quiet = performance.now() + ms; };
+  ScrollTrigger.addEventListener('refresh', () => hush(800));
+  function onScroll(self) {
+    const v = self.getVelocity(); zoomTo(1.05 + .08 * Math.min(1, Math.abs(v) / 3200));
+    if (skipping || performance.now() < quiet || Math.abs(v) < FAST || self.progress < .04 || self.progress > .96) return;
+    skipping = true; const y = v > 0 ? self.end + innerHeight * .6 : self.start - innerHeight * .6;
+    if (lenis) lenis.scrollTo(y, { duration: .9, force: true, onComplete: () => { skipping = false; } });
+    else { scrollTo({ top: y, behavior: 'smooth' }); setTimeout(() => { skipping = false; }, 1200); }
+  }
+
   // The walk: the stage is pinned and the scroll moves through the frames.
   let room = -1, walk = null;
   const setRoom = (i, dir) => { if (i === room) return; const old = ROOMS[room]; room = i;
@@ -73,7 +97,7 @@
     ROOMS.forEach((r, j) => r.btn.classList.toggle('on', j === i)); };
   const state = { f: 0 };
   walk = gsap.to(state, { f: FRAMES - 1, ease: 'none',
-    scrollTrigger: { id: 'walk', trigger: stage, start: 'top top', end: () => '+=' + Math.round(innerHeight * LENGTH), pin: true, scrub: .45, anticipatePin: 1, invalidateOnRefresh: true },
+    scrollTrigger: { id: 'walk', trigger: stage, start: 'top top', end: () => '+=' + Math.round(innerHeight * LENGTH), pin: true, scrub: .45, anticipatePin: 1, invalidateOnRefresh: true, onUpdate: onScroll },
     onUpdate: () => paint() });
   // paint() also runs after every re-measure: a refresh moves the walk without firing onUpdate (reload mid-walk, rotate).
   function paint() {
@@ -87,13 +111,12 @@
   ScrollTrigger.addEventListener('refresh', () => requestAnimationFrame(paint));
   paint();
 
-  const go = y => { if (lenis) { lenis.resize(); lenis.scrollTo(y, { duration: 1.4, force: true }); } else scrollTo({ top: y, behavior: 'smooth' }); };
+  const go = y => { hush(2200); if (lenis) { lenis.resize(); lenis.scrollTo(y, { duration: 1.4, force: true }); } else scrollTo({ top: y, behavior: 'smooth' }); };
   ROOMS.forEach(r => r.btn.addEventListener('click', () => { const st = walk.scrollTrigger; go(st.start + (st.end - st.start) * r.at); }));
-  sec.querySelector('.ws-skip').addEventListener('click', e => { e.preventDefault(); go(walk.scrollTrigger.end + innerHeight * .9); });
 
   // Pages above this section finish loading images after start-up, so positions are measured again.
   addEventListener('load', () => { ScrollTrigger.refresh();
     // Test hook: ?at=0.5 opens the page half way through the walk.
-    const q = /[?&]at=([\d.]+)/.exec(location.search); if (q) { const st = walk.scrollTrigger, y = st.start + (st.end - st.start) * +q[1]; if (lenis) { lenis.resize(); lenis.scrollTo(y, { immediate: true, force: true }); } else scrollTo(0, y); } });
+    const q = /[?&]at=([\d.]+)/.exec(location.search); if (q) { hush(3000); const st = walk.scrollTrigger, y = st.start + (st.end - st.start) * +q[1]; if (lenis) { lenis.resize(); lenis.scrollTo(y, { immediate: true, force: true }); } else scrollTo(0, y); } });
   if ('ResizeObserver' in window) { let h = 0, t = 0; new ResizeObserver(() => { const n = document.body.scrollHeight; if (Math.abs(n - h) > 4) { h = n; clearTimeout(t); t = setTimeout(() => ScrollTrigger.refresh(), 250); } }).observe(document.body); }
 })();
