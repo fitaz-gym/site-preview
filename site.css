@@ -1235,3 +1235,6 @@ h1, h2, h3 { overflow-wrap: break-word; }
 .plan.ultimate .btn { background: var(--accent); color: var(--accent-ink); }
 .plan.base .btn { background: none; color: inherit; box-shadow: inset 0 0 0 1.5px currentColor; }
 .opt.tier.ultimate { border-width: 2px; background-image: linear-gradient(#0b0b0c, #0b0b0c), linear-gradient(var(--accent), var(--accent)); }
+
+/* 26 Nov 2026: no big rating headline. The rating sits beside the stars. */
+.gline .gnum { font: 700 14px/1 var(--body); letter-spacing: 0; color: #fff; }
