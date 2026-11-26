@@ -1260,3 +1260,7 @@ h1, h2, h3 { overflow-wrap: break-word; }
 .wallsec { padding-bottom: clamp(24px, 3vw, 40px); }
 .wallsec .revm { margin-bottom: 0; }
 .wallsec .revm { margin-top: 26px; }
+
+/* 26 Nov 2026: the floating Chat now button uses the accent colour. */
+:root .chat-fab, :root[data-mode="silver"] .chat-fab { background: var(--accent); background-image: none; color: var(--accent-ink); box-shadow: 0 12px 30px -12px var(--accent); }
+:root[data-accent="silver"] .chat-fab { background: var(--silver); color: #0b0b0c; }
