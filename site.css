@@ -1228,3 +1228,10 @@ h1, h2, h3 { overflow-wrap: break-word; }
 .revm-nav { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 14px; color: rgba(255,255,255,.8); font: 600 14px/1 var(--body); }
 .revm-nav button { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); background: none; color: #fff; font-size: 18px; cursor: pointer; }
 .revm-nav span { min-width: 56px; text-align: center; font-variant-numeric: tabular-nums; }
+
+/* 26 Nov 2026: no bar under the walk-through video. Ultimate is the first and the highlighted membership. */
+.wt-ctl[hidden] { display: none; }
+.plan.ultimate { border-width: 2px; background-image: linear-gradient(#0b0b0c, #0b0b0c), linear-gradient(var(--accent), var(--accent)); box-shadow: 0 26px 60px -34px var(--accent); }
+.plan.ultimate .btn { background: var(--accent); color: var(--accent-ink); }
+.plan.base .btn { background: none; color: inherit; box-shadow: inset 0 0 0 1.5px currentColor; }
+.opt.tier.ultimate { border-width: 2px; background-image: linear-gradient(#0b0b0c, #0b0b0c), linear-gradient(var(--accent), var(--accent)); }
