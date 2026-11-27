@@ -169,7 +169,11 @@
     full.addEventListener('click', () => { const on = !w.classList.contains('full'); w.classList.toggle('full', on); document.documentElement.classList.toggle('cb-lock', on); full.setAttribute('aria-pressed', String(on)); full.textContent = on ? '✕' : '⤢'; });
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && w.classList.contains('full')) full.click(); });
     // Plays on its own while it is on screen (not for people who ask for reduced motion), and stops when scrolled away.
-    if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { seen = e.isIntersecting; if (seen) { load(); if (!held && !calm) play(); } else v.pause(); }), { threshold: .5 }).observe(view);
+    // The file starts loading two screens before it arrives, so it is ready to play the moment it shows.
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((es, io) => { if (es.some(e => e.isIntersecting)) { io.disconnect(); v.preload = 'auto'; load(); } }, { rootMargin: '200% 0px' }).observe(view);
+      new IntersectionObserver(es => es.forEach(e => { seen = e.isIntersecting; if (seen) { load(); if (!held && !calm) play(); } else v.pause(); }), { threshold: .12 }).observe(view);
+    }
     const q = /[?&]wt=([\d.]+)/.exec(location.search); if (q) { held = true; seek(+q[1]); }
     if (/[?&]tourfull\b/.test(location.search)) full.click();
   });

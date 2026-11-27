@@ -1426,3 +1426,11 @@ h3 { font-size: clamp(19px, 2.2vw, 24px); }
 @media (max-width: 520px) { .facts { grid-template-columns: 1fr; } }
 .fact span { font: 800 22px/1 var(--display); letter-spacing: 0; opacity: .9; }
 .fact p { margin: 0; font-size: 16px; line-height: 1.4; }
+
+/* Walk-through video, large format (27 Nov 2026): edge to edge, no heading, plays as it arrives. */
+.wtsec { background: #0b0b0c; }
+.wtsec .wt { gap: 0; }
+.wtsec .wt:not(.full) .wt-view { border-radius: 0; aspect-ratio: auto; height: min(88svh, 56.25vw); }
+@media (max-width: 620px) { .wtsec .wt:not(.full) .wt-view { height: min(76svh, 128vw); } }
+.wtsec .wt:not(.full) .wt-ctl, .wtsec .wt:not(.full) .wt-rooms { padding: 10px var(--pad); --txt: #eceef1; --line: rgba(255,255,255,.22); --paper: #0b0b0c; }
+.prof .lede { max-width: 62ch; }
