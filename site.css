@@ -1395,3 +1395,7 @@ h3 { font-size: clamp(19px, 2.2vw, 24px); }
   .ws-card { left: 20px; bottom: calc(112px + env(safe-area-inset-bottom)); }
   .ws-intro span { bottom: calc(120px + env(safe-area-inset-bottom)); }
 }
+
+/* Scroll walk-through v5.1 (27 Nov 2026): no room names on the picture (Georgio). They stay for screen readers. */
+.ws-title { position: absolute; width: 1px; height: 1px; left: 0; bottom: 0; overflow: hidden; clip-path: inset(50%); }
+@media (max-aspect-ratio: 1/1) { .ws-title { left: 0; right: auto; bottom: 0; } }
