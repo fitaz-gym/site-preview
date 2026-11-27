@@ -265,7 +265,7 @@
     const steps = $$('.steps i', wiz), s2 = $('[data-step="2"]', wiz), s3 = $('[data-step="3"]', wiz), sum = $('.sum', wiz);
     const sumT = $('.what b', sum), sumD = $('.what span', sum), gos = [$('.btn', sum), $('[data-s="go"]', wiz)];
     const S = k => $(`[data-s="${k}"]`, wiz);
-    const fee = p => p.fee === '0' ? `<s>$${p.feeWas}</s> $0` : `$${p.fee}`;
+    const fee = p => p.fee === '0' ? `<s>$${p.feeWas}</s> <mark>$0</mark>` : `$${p.fee}`;
     document.body.classList.add('has-sum');
     const paint = () => {
       $$('[data-tier]', wiz).forEach(o => o.setAttribute('aria-checked', String(o.dataset.tier === state.tier)));

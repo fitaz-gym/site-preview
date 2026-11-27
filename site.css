@@ -1485,3 +1485,13 @@ h3 { font-size: clamp(19px, 2.2vw, 24px); }
 .fee mark { background: var(--accent); color: var(--accent-ink); font-weight: 800; padding: 2px 9px; border-radius: 7px; margin-left: 4px; }
 .plan.ultimate .fee mark { background: #fff; color: #0b0b0c; }
 .plan.ultimate .fee s { text-decoration-color: #fff; }
+
+/* Offer tag on every card the offer applies to (27 Nov 2026): join blocks, plan cards, the memberships steps. */
+.promo { justify-self: start; align-self: start; display: inline-flex; align-items: center; gap: 7px; width: max-content; max-width: 100%; padding: 7px 11px 7px 9px; border-radius: 8px; background: var(--accent); color: var(--accent-ink); font: 700 12px/1 var(--body); letter-spacing: .06em; text-transform: uppercase; transform: rotate(-1.5deg); }
+.promo::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: promo-dot 1.6s ease-in-out infinite; }
+@keyframes promo-dot { 50% { opacity: .25; } }
+@media (prefers-reduced-motion: reduce) { .promo::before { animation: none; } }
+.plan.ultimate .promo { background: #fff; color: #0b0b0c; }
+.opt[aria-checked="true"] .promo { background: var(--txt); color: var(--paper); }
+.opt .f mark, .recap dd mark, .recap dd s + mark { background: var(--accent); color: var(--accent-ink); font-weight: 800; padding: 2px 9px; border-radius: 7px; margin-left: 4px; }
+.opt .f s, .recap dd s { text-decoration-thickness: 2px; text-decoration-color: var(--accent); opacity: .7; }
