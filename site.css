@@ -1459,3 +1459,7 @@ h3 { font-size: clamp(19px, 2.2vw, 24px); }
 .stp-top i { grid-column: 1 / -1; height: 4px; border-radius: 2px; background: rgba(0,0,0,.12); overflow: hidden; }
 .stp-top i b { display: block; height: 100%; width: 33%; background: var(--accent); border-radius: 2px; transition: width .3s var(--ease); }
 .form.flow:has(.ok:not([hidden])) .stp-top { display: none; }
+
+/* Trainer profile: Instagram logo and handle, linked to their profile (27 Nov 2026). */
+.tcontact a.ig { gap: 8px; text-decoration: none; font-weight: 600; }
+.tcontact a.ig span { text-decoration: underline; text-underline-offset: 4px; }
