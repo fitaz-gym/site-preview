@@ -1463,3 +1463,14 @@ h3 { font-size: clamp(19px, 2.2vw, 24px); }
 /* Trainer profile: Instagram logo and handle, linked to their profile (27 Nov 2026). */
 .tcontact a.ig { gap: 8px; text-decoration: none; font-weight: 600; }
 .tcontact a.ig span { text-decoration: underline; text-underline-offset: 4px; }
+
+/* Member results (27 Nov 2026): one branded card for every before and after. The photos carry no text of their own;
+   the logo, the Week 1 and Week 12 tags and the dividing line are drawn here, so all five match. */
+.res-pic { position: relative; display: block; background: #0b0b0c; }
+.res-pic > img, .res-pic > picture > img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
+.res-pic::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 3px; margin-left: -1.5px; background: #fff; }
+.res-logo { position: absolute; z-index: 1; top: 12px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; padding: 8px 13px; border-radius: 999px; background: #0b0b0c; }
+.res-logo img { display: block; width: 84px; height: auto; aspect-ratio: auto; }
+.res-card .res-tag { position: absolute; z-index: 1; bottom: 12px; padding: 8px 12px; border-radius: 999px; font: 700 12px/1 var(--body); letter-spacing: .08em; text-transform: uppercase; background: #0b0b0c; color: #fff; }
+.res-tag.l { left: 12px; }
+.res-card .res-tag.r { right: 12px; background: var(--accent); color: var(--accent-ink); }
