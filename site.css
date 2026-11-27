@@ -1495,3 +1495,49 @@ h3 { font-size: clamp(19px, 2.2vw, 24px); }
 .opt[aria-checked="true"] .promo { background: var(--txt); color: var(--paper); }
 .opt .f mark, .recap dd mark, .recap dd s + mark { background: var(--accent); color: var(--accent-ink); font-weight: 800; padding: 2px 9px; border-radius: 7px; margin-left: 4px; }
 .opt .f s, .recap dd s { text-decoration-thickness: 2px; text-decoration-color: var(--accent); opacity: .7; }
+
+/* ===== Layout review fixes (27 Nov 2026, gate 2 pass over all 17 pages) ===== */
+/* 1. Trainer hero: a long name (MICHAEL) ran past the right gutter on phones. */
+.ttxt { grid-template-columns: minmax(0, 1fr); }
+.ttxt h1 { font-size: clamp(44px, 13vw, 150px); overflow-wrap: normal; }
+/* 3. Memberships on a phone: the chat button sat on the footer's Terms and Privacy links. */
+@media (max-width: 899px) { body.has-sum .ftr { padding-bottom: 176px; } }
+/* 4. Join block: the offer sticker clipped the Flexi card when the block has no tick list. */
+@media (min-width: 621px) { .joinhead { min-height: 128px; } }
+/* 5. Scroll rails stopped short of the right edge. */
+.rail, .days { max-width: none; }
+/* 6. Terms and Privacy: body copy lines up with the page heading. */
+.wrap.prose { max-width: var(--max); }
+.wrap.prose > * { max-width: 760px; }
+/* 7. FAQ, Terms, Privacy: space before the contact block. */
+.phead ~ section.wrap:not(.phead) { padding-bottom: clamp(48px, 8vw, 96px); }
+/* 8. Reviews strip on wide screens starts on the page gutter like its heading. */
+@media (min-width: 1000px) { .revm-track { padding-left: max(var(--pad), calc((100vw - var(--max)) / 2 + var(--pad))); scroll-padding-left: max(var(--pad), calc((100vw - var(--max)) / 2 + var(--pad))); } }
+/* 9. Buttons with the word Ultimate had double-width gaps round it. */
+.btn .ult { margin-inline: -4px; }
+/* 10. Trainer profile columns start at the same height under their headings. */
+.prof2 h2 { margin-bottom: 0; }
+.prof2 > div { display: grid; gap: 16px; align-content: start; }
+/* 11. Join block cards: buttons line up along the bottom, and the offer tag sits on the card's top edge so every card starts level. */
+.term { display: flex; flex-direction: column; }
+.term .btn { margin-top: auto; }
+.term > .c:last-of-type { margin-bottom: 10px; }
+.term .promo { position: absolute; top: -13px; right: 16px; font-size: 11px; padding: 7px 10px 7px 8px; }
+.opt .promo { position: absolute; top: -12px; left: 14px; font-size: 11px; padding: 6px 9px 6px 8px; }
+@media (max-width: 380px) { .term .promo, .opt .promo { letter-spacing: .02em; } }
+/* 12. Cards in a row: text starts at the top of every card. */
+.blocks li, .facts4 .in, .facts4 > *, .steps3 li { align-content: start; }
+/* 14. Memberships step 1: feature lists use ticks like the same plans elsewhere. */
+.opt.tier ul { list-style: none; padding-left: 0; gap: 6px; }
+.opt.tier ul li { position: relative; padding-left: 24px; }
+.opt.tier ul li::before { content: ""; position: absolute; left: 3px; top: .42em; width: 11px; height: 6px; border-left: 2.5px solid var(--accent); border-bottom: 2.5px solid var(--accent); transform: rotate(-45deg); }
+.opt.tier.ultimate ul li::before { border-color: #fff; }
+/* 15. Memberships recap: the struck fee and the $0 chip stay on one line. */
+.recap dd { white-space: nowrap; }
+.recap dd mark, .recap dd s + mark { margin-left: 6px; }
+/* 16. Tap targets. */
+.hlm-tabs button { min-height: 44px; }
+.ftr .legal a { display: inline-block; padding: 12px 0; }
+/* 18. Join block: no extra space under the last row of cards; tag clear of the tick list on phones. */
+.terms:last-child { margin-bottom: 0; }
+.joinsec .ticks.incl { margin-bottom: 10px; }
