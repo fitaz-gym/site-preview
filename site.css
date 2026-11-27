@@ -1416,10 +1416,10 @@ h3 { font-size: clamp(19px, 2.2vw, 24px); }
 .prof2 { display: grid; gap: 36px; }
 @media (min-width: 860px) { .prof2 { grid-template-columns: .8fr 1.2fr; gap: 64px; } }
 .prof2 h2 { font-size: clamp(26px, 3.4vw, 40px); margin-bottom: 16px; }
-.ticks { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
-.ticks li { position: relative; padding: 14px 0 14px 34px; border-top: 1px solid var(--line); font-weight: 600; font-size: 17px; }
-.ticks li:last-child { border-bottom: 1px solid var(--line); }
-.ticks li::before { content: ""; position: absolute; left: 4px; top: 20px; width: 13px; height: 7px; border-left: 2.5px solid var(--accent); border-bottom: 2.5px solid var(--accent); transform: rotate(-45deg); }
+.prof2 .ticks { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.prof2 .ticks li { position: relative; display: block; padding: 14px 0 14px 34px; border-top: 1px solid var(--line); font-weight: 600; font-size: 17px; }
+.prof2 .ticks li:last-child { border-bottom: 1px solid var(--line); }
+.prof2 .ticks li::before { content: ""; position: absolute; left: 4px; top: 20px; flex: none; margin: 0; border-radius: 0; background: none; width: 13px; height: 7px; border-left: 2.5px solid var(--accent); border-bottom: 2.5px solid var(--accent); transform: rotate(-45deg); }
 .facts-h { margin-top: clamp(40px, 6vw, 64px); font-size: clamp(26px, 3.4vw, 40px); }
 .facts.n3 { grid-template-columns: 1fr; }
 @media (min-width: 800px) { .facts.n3 { grid-template-columns: repeat(3, 1fr); } }
@@ -1474,3 +1474,14 @@ h3 { font-size: clamp(19px, 2.2vw, 24px); }
 .res-card .res-tag { position: absolute; z-index: 1; bottom: 12px; padding: 8px 12px; border-radius: 999px; font: 700 12px/1 var(--body); letter-spacing: .08em; text-transform: uppercase; background: #0b0b0c; color: #fff; }
 .res-tag.l { left: 12px; }
 .res-card .res-tag.r { right: 12px; background: var(--accent); color: var(--accent-ink); }
+
+/* Join block (27 Nov 2026): offer sticker, and the joining fee struck out with the $0 highlighted. */
+.joinhead { position: relative; }
+.sticker { position: absolute; right: 0; top: -6px; width: 124px; height: 124px; border-radius: 50%; display: grid; place-content: center; text-align: center; gap: 2px; background: var(--accent); color: var(--accent-ink); font: 600 13px/1.15 var(--body); letter-spacing: .02em; text-transform: uppercase; transform: rotate(-9deg); box-shadow: 0 10px 28px -10px rgba(0,0,0,.55), inset 0 0 0 2px rgba(255,255,255,.28); }
+.sticker b { font: 800 27px/1 var(--display); font-stretch: 118%; letter-spacing: -.01em; }
+.joinhead > :first-child { padding-right: 140px; }
+@media (max-width: 620px) { .sticker { position: static; margin: 4px 0 14px; width: 108px; height: 108px; } .sticker b { font-size: 23px; } .joinhead > :first-child { padding-right: 0; } .joinhead { display: flex; flex-direction: column-reverse; align-items: flex-start; } }
+.fee s { text-decoration: line-through; text-decoration-thickness: 2px; text-decoration-color: var(--accent); opacity: .7; }
+.fee mark { background: var(--accent); color: var(--accent-ink); font-weight: 800; padding: 2px 9px; border-radius: 7px; margin-left: 4px; }
+.plan.ultimate .fee mark { background: #fff; color: #0b0b0c; }
+.plan.ultimate .fee s { text-decoration-color: #fff; }
