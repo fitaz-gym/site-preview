@@ -313,6 +313,16 @@
     show((days.find(b => b.dataset.d === today) || days.find(b => b.dataset.d > today) || days[0]).dataset.d);
   }
 
+  // Tap-through forms: one question at a time, and a tapped answer moves straight to the next one.
+  $$('form[data-steps]').forEach(f => {
+    const st = $$('fieldset.stp', f), top = $('.stp-top', f), back = $('.stp-back', f), n = $('.stp-n', f), bar = $('.stp-top i b', f); let i = 0;
+    const show = (k, focus) => { i = Math.max(0, Math.min(st.length - 1, k)); st.forEach((x, j) => { x.hidden = j !== i; });
+      back.hidden = !i; n.textContent = `Step ${i + 1} of ${st.length}`; bar.style.width = (i + 1) / st.length * 100 + '%';
+      if (focus) { const t = $('input:not([type=radio]):not([tabindex])', st[i]); if (t) t.focus({ preventScroll: true }); } };
+    top.hidden = false; f.classList.add('on'); show(0);
+    st.forEach((x, j) => $$('input[type=radio]', x).forEach(r => { r.addEventListener('change', () => setTimeout(() => show(j + 1, true), 220)); r.addEventListener('click', () => { if (r.checked && i === j) setTimeout(() => show(j + 1, true), 220); }); }));
+    back.addEventListener('click', () => show(i - 1));
+  });
   // Forms: validate, post to the endpoint in data-endpoint, show thanks. Falls back to email if no endpoint yet.
   $$('form[data-lead]').forEach(f => {
     const err = $('.err', f), ok = $('.ok', f);

@@ -1434,3 +1434,28 @@ h3 { font-size: clamp(19px, 2.2vw, 24px); }
 @media (max-width: 620px) { .wtsec .wt:not(.full) .wt-view { height: min(76svh, 128vw); } }
 .wtsec .wt:not(.full) .wt-ctl, .wtsec .wt:not(.full) .wt-rooms { padding: 10px var(--pad); --txt: #eceef1; --line: rgba(255,255,255,.22); --paper: #0b0b0c; }
 .prof .lede { max-width: 62ch; }
+
+/* Trainer enquiry as three taps (27 Nov 2026). */
+.flowwrap { display: grid; gap: 22px; max-width: 720px; }
+.flowhead { display: grid; gap: 10px; }
+.form.flow { max-width: none; gap: 18px; }
+.form.flow legend { font: 700 clamp(22px, 3.2vw, 28px)/1.15 var(--body); letter-spacing: -.01em; margin-bottom: 16px; }
+.form.flow .opts { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+@media (max-width: 420px) { .form.flow .opts { grid-template-columns: 1fr; } }
+.form.flow .opts label { position: relative; display: flex; align-items: center; min-height: 60px; padding: 10px 44px 10px 18px; border-radius: 16px; border: 1.5px solid #77777c; background: #fff; color: var(--ink); font: 600 17px/1.2 var(--body); cursor: pointer; transition: background .15s, border-color .15s, transform .15s; }
+.form.flow .opts label::after { content: "\2192"; position: absolute; right: 16px; opacity: .45; }
+.form.flow .opts label:active { transform: scale(.98); }
+.form.flow .opts input { position: absolute; opacity: 0; width: 0; height: 0; }
+.form.flow .opts label:has(:checked) { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.form.flow .opts label:has(:checked)::after { content: "\2713"; opacity: 1; }
+.form.flow .opts label:has(:focus-visible) { outline: 3px solid var(--accent); outline-offset: 3px; }
+.form.flow .stp { gap: 14px; }
+.form.flow .stp[hidden] { display: none; }
+.stp-top { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px 14px; color: var(--ink); }
+.stp-top[hidden] { display: none; }
+.stp-n { font: 600 14px/1 var(--body); opacity: .7; justify-self: end; grid-column: 2; }
+.stp-back { grid-column: 1; grid-row: 1; border: 0; background: none; padding: 0; min-height: 44px; font: 600 15px/1 var(--body); color: inherit; cursor: pointer; }
+.stp-back[hidden] { display: block; visibility: hidden; }
+.stp-top i { grid-column: 1 / -1; height: 4px; border-radius: 2px; background: rgba(0,0,0,.12); overflow: hidden; }
+.stp-top i b { display: block; height: 100%; width: 33%; background: var(--accent); border-radius: 2px; transition: width .3s var(--ease); }
+.form.flow:has(.ok:not([hidden])) .stp-top { display: none; }
